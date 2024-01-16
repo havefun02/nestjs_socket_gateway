@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO Example</title>
+  </head>
+  <body>
+    <h1>Socket.IO Example</h1>
+
+    <label for="messageInput">Enter Message:</label>
+    <input type="text" id="messageInput" placeholder="Type your message" />
+    <button onclick="sendMessage()">Send Message</button>
+
+    <hr />
+
+    <h2>Messages from Server</h2>
+    <textarea id="messageTextArea" rows="5" readonly></textarea>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
+    <script>
+      const socket = io('http://localhost:3000'); // Replace with your server URL
+
+      function sendMessage() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+
+        if (message.trim() !== '') {
+          socket.emit('event', message);
+          messageInput.value = ''; // Clear the input field
+        }
+      }
+
+      // Display the message from server in the text area
+      socket.on('broadcast', (data) => {
+        console.log('receive', data);
+        const messageTextArea = document.getElementById('messageTextArea');
+        messageTextArea.value += `${data}\n`;
+        // You can customize the display format as needed
+      });
+    </script>
+  </body>
+</html>
